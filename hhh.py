@@ -1,6 +1,6 @@
 import pygame as pg
-from collections import deque
-from random import choice
+# from collections import deque
+# from random import choice
 
 WIDTH = 1200
 HEIGHT = 750
