@@ -83,28 +83,35 @@ class Hexagon:
 
 
 def paint_hexagons(x_paint, y_paint, half, count_row):
-    rise = True
-    first_row = count_row
-    while count_row != first_row - 1:
-        x_f = x_paint
-        y_f = y_paint
-        for j in range(count_row):
-            h = Hexagon(x_paint, y_paint)
-            h.paint()
-            x_paint += 2 * half
-
-        if count_row > (2 * first_row + rows) // 2 + 1:
-            rise = False
-        if rise:
-            count_row += 1
-            x_paint = x_f - half
-            y_paint = y_f + 1.5 * a
-        else:
-            count_row -= 1
-            x_paint = x_f + half
-            y_paint = y_f + 1.5 * a
+    for i in range(len(grid)):
+        grid[i].paint()
 
 
+rise = True
+first_row = count_row
+i = 0
+while count_row != first_row - 1:
+    x_f = x_paint
+    y_f = y_paint
+    for j in range(count_row):
+        grid[i] = Hexagon(x_paint, y_paint)
+        x_paint += 2 * half
+        i += 1
+
+    if count_row > (2 * first_row + rows) // 2 + 1:
+        rise = False
+    if rise:
+        count_row += 1
+        x_paint = x_f - half
+        y_paint = y_f + 1.5 * a
+    else:
+        count_row -= 1
+        x_paint = x_f + half
+        y_paint = y_f + 1.5 * a
+
+
+
+print(grid)
 while True:
     screen.fill('white')
 
