@@ -14,7 +14,6 @@ hei = 0.5 * a
 flag = 1
 
 
-
 class Hexagon:
     def __init__(self, x, y):
         self.x = x
