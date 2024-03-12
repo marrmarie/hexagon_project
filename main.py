@@ -44,25 +44,8 @@ class Hexagon:
         if self.walls[5]:
             pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a))
 
-pg.init()
 
-screen = pg.display.set_mode(SIZE)
-time = pg.time.Clock()
-x = 0
-y = 0
-while True:
-    screen.fill('white')
-
-    for i in pg.event.get():
-        if i.type == pg.QUIT:
-            exit()
-        if i.type == pg.MOUSEBUTTONDOWN:
-            print(pg.mouse.get_pos())
-
-    x_paint = 600 - half
-    rows = (1500 - a) // (3 * a)
-    ost = (1500 - a) % (3 * a)
-    y_paint = max(ost / 2, 0.5 * a)
+def paint_hexagons(x_paint, y_paint, half):
     rise = True
     count_row = 1
     for i in range(rows + 3):
@@ -83,6 +66,29 @@ while True:
             count_row -= 1
             x_paint = x_f + half
             y_paint = y_f + 1.5 * a
+
+pg.init()
+
+screen = pg.display.set_mode(SIZE)
+time = pg.time.Clock()
+x = 0
+y = 0
+grid = []
+# for i in range()
+while True:
+    screen.fill('white')
+
+    for i in pg.event.get():
+        if i.type == pg.QUIT:
+            exit()
+        if i.type == pg.MOUSEBUTTONDOWN:
+            print(pg.mouse.get_pos())
+
+    x_paint = 600 - half
+    rows = (1500 - a) // (3 * a)
+    ost = (1500 - a) % (3 * a)
+    y_paint = max(ost / 2, 0.5 * a)
+    paint_hexagons(x_paint, y_paint, half)
 
     pg.display.flip()
     time.tick(100)
