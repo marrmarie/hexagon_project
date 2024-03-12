@@ -7,7 +7,7 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 1
+flag = 5
 pg.init()
 
 
@@ -15,22 +15,27 @@ if flag == 1:
     a = 60
     count_row = 5
     rows = 4
+    grid = [-1 for i in range(61)]
 elif flag == 2:
     a = 42.3
     count_row = 6
     rows = 8
+    grid = [-1 for i in range(114)]
 elif flag == 3:
     a = 32.6
     count_row = 7
     rows = 12
+    grid = [-1 for i in range(183)]
 elif flag == 4:
     a = 26.4
     count_row = 9
     rows = 16
+    grid = [-1 for i in range(289)]
 elif flag == 5:
     a = 19.2
     count_row = 11
     rows = 24
+    grid = [-1 for i in range(515)]
 
 HEX_CONST = (3 / 4) ** 0.5
 half = HEX_CONST * a
@@ -100,12 +105,6 @@ def paint_hexagons(x_paint, y_paint, half, count_row):
             y_paint = y_f + 1.5 * a
 
 
-
-
-
-
-# grid = [-1 for i in range(((rows + 2) // 2) * ((rows + 2) // 2 + 1) + (rows + 2) // 2 + 1)]
-# print(len(grid))
 while True:
     screen.fill('white')
 
