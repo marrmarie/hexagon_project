@@ -15,14 +15,28 @@ if flag == 1:
     a = 60
     count_row = 5
     rows = 4
-
+elif flag == 2:
+    a = 42.3
+    count_row = 6
+    rows = 8
+elif flag == 3:
+    a = 32.6
+    count_row = 7
+    rows = 12
+elif flag == 4:
+    a = 26.4
+    count_row = 9
+    rows = 16
+elif flag == 5:
+    a = 19.2
+    count_row = 11
+    rows = 24
 
 HEX_CONST = (3 / 4) ** 0.5
 half = HEX_CONST * a
 hei = 0.5 * a
 x_paint = 600 - count_row * half
-ost = (1500 - a) % (3 * a)
-y_paint = max(ost / 2, 0.5 * a)
+y_paint = 0.5 * a
 
 
 
@@ -66,7 +80,7 @@ class Hexagon:
 def paint_hexagons(x_paint, y_paint, half, count_row):
     rise = True
     first_row = count_row
-    while count_row != 4:
+    while count_row != first_row - 1:
         x_f = x_paint
         y_f = y_paint
         for j in range(count_row):
