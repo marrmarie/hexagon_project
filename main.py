@@ -123,6 +123,26 @@ class Hexagon:
             return choice(neighbours)
         return False
 
+def true_false_cells(now, next):
+    if next.number == now.nuber - 1:
+        now.walls[0] = False
+        next.walls[1] = False
+    elif next.number == now.nuber + 1:
+        now.walls[1] = False
+        next.walls[0] = False
+    elif next.number == now.number - now.prev_line:
+        now.walls[2] = False
+        next.walls[4] = False
+    elif next.number == now.number - now.prev_line - 1:
+        now.walls[3] = False
+        next.walls[5] = False
+    elif next.number == now.number + now.prev_line + 1:
+        now.walls[4] = False
+        next.walls[2] = False
+    elif next.number == now.number + now.prev_line + 1:
+        now.walls[5] = False
+        next.walls[3] = False
+
 
 
 def paint_hexagons(x_paint, y_paint, half, count_row):
@@ -155,6 +175,9 @@ while count_row != first_row - 1:
         y_paint = y_f + 1.5 * a
 
 
+cell_now = grid[0]
+cell_now.visited = True
+queue = deque()
 
 while True:
     screen.fill('white')
@@ -165,6 +188,15 @@ while True:
         # if i.type == pg.MOUSEBUTTONDOWN:
         #     print(pg.mouse.get_pos())
 
+
+    next_c = cell_now.choice_to_go(grid)
+    if next_c:
+        next_c.visited = True
+        queue.append(cell_now)
+        true_false_cells(cell_now, next_c)
+        cell_now = next_c
+    elif queue:
+        cell_now = queue.pop()
     paint_hexagons(x_paint, y_paint, half, count_row)
     pg.display.flip()
     time.tick(100)
