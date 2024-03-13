@@ -12,7 +12,7 @@ GREEN = (52, 164, 126)
 pg.init()
 
 
-class Hexagon:
+class Hexagon:  # класс, выполняющий операции с шестиугольниками
     def __init__(self, x, y, n, row, col, prev_line):
         self.x = x
         self.y = y
@@ -23,7 +23,7 @@ class Hexagon:
         self.col = col
         self.prev_line = prev_line
 
-    def paint(self):
+    def paint(self):  # рисует один шестиугольник
         if self.walls[3]:
             pg.draw.line(screen, 'black', (self.x, self.y), (self.x + half, self.y - hei), 3)
         x1 = self.x + half
@@ -46,7 +46,7 @@ class Hexagon:
         if self.walls[0]:
             pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a), 3)
 
-    def choice_to_go_first_half(self, grid):
+    def choice_to_go_first_half(self, grid):  # выбор следующей клетки для верхней половины поля, расширяющейся к низу
         neighbours = []
         n1 = grid[self.number - 1 - 1]
         n2 = grid[self.number + 1 - 1]
@@ -83,7 +83,7 @@ class Hexagon:
             return choice(neighbours)
         return False
 
-    def choice_to_go_second_half(self, grid):
+    def choice_to_go_second_half(self, grid):  # выбор следующей клетки для нижней половины поля, сужающейся к низу
         neighbours = []
         n1 = grid[self.number - 1 - 1]
         if n1.number <= len(grid) and n1.number > 0 and not n1.visited:
@@ -119,7 +119,7 @@ class Hexagon:
             return choice(neighbours)
         return False
 
-    def choice_to_go_center(self, grid):
+    def choice_to_go_center(self, grid):  # выбор следующей клетки для центрального ряда
         neighbours = []
 
         n1 = grid[self.number - 1 - 1]
@@ -158,14 +158,14 @@ class Hexagon:
         return False
 
 
-def red_dots(grid):
+def red_dots(grid):  # рисует красные точки, которые обозначают непосещенность шестиугольника во время генерации
     for i in range(len(grid)):
         h = grid[i]
         if not h.visited:
             pg.draw.circle(screen, (196, 17, 74), (h.x + half, h.y + 0.5 * a), a // 3)
 
 
-def true_false_cells_first_half(now, next):
+def true_false_cells_first_half(now, next):  # отмечает наличие стен для верхней половины поля
     if next.number == now.number - 1:
         now.walls[0] = False
         next.walls[1] = False
@@ -186,7 +186,7 @@ def true_false_cells_first_half(now, next):
         next.walls[3] = False
 
 
-def true_false_cells_second_half(now, next):
+def true_false_cells_second_half(now, next):  # отмечает наличие стен для нижней половины поля
     if next.number == now.number - 1:
         now.walls[0] = False
         next.walls[1] = False
@@ -207,7 +207,7 @@ def true_false_cells_second_half(now, next):
         next.walls[3] = False
 
 
-def true_false_cells_center(now, next):
+def true_false_cells_center(now, next):  # отмечает наличие стен для центрального ряда
     if next.number == now.number - 1:
         now.walls[0] = False
         next.walls[1] = False
@@ -228,7 +228,7 @@ def true_false_cells_center(now, next):
         next.walls[3] = False
 
 
-def paint_hexagons():
+def paint_hexagons():  # рисует все шестиугольники
     for i in range(len(grid)):
         grid[i].paint()
 
@@ -246,10 +246,10 @@ t1 = base_font2.render('', 1, GREEN)
 t2 = base_font2.render('', 1, GREEN)
 final_scene = False
 
-while True:
+while True:  # игровой цикл
     screen.fill(GREEN)
 
-    for i in pg.event.get():
+    for i in pg.event.get():  # обработка событий
         if i.type == pg.QUIT:
             exit()
         if not final_scene:
@@ -357,7 +357,7 @@ while True:
                             y = grid[0].y
                             grid[0].visited = True
 
-                else:
+                else:  # перемещение кружка при прохождении лабиринта
                     if i.type == pg.KEYDOWN:
                         if i.key == pg.K_e and (int(x + half), int(y - 1.5 * a)) in coordinates:
                             if not grid[coordinates.index((int(x), int(y)))].walls[2]:
@@ -385,7 +385,7 @@ while True:
                         if int(x) == int(coordinates[-1][0]) and int(y) == int(coordinates[-1][1]):
                             final_scene = True
 
-        else:  # для финального изображения
+        else:  # для финального экрана
             if (i.type == pg.MOUSEBUTTONDOWN and 200 <= pg.mouse.get_pos()[0] <= 500
                     and 450 <= pg.mouse.get_pos()[1] <= 550):
                 # сброс параметров для продолжения игры
@@ -409,8 +409,7 @@ while True:
                 exit()
 
     if not final_scene:
-        if not game:
-            # для ввода уровня
+        if not game:  # для ввода уровня
             if typing and len(usertext) == 1:
                 pg.draw.rect(screen, 'white', (370, 600, 450, 60), 0)
                 pg.draw.rect(screen, 'white', input_text, 0)
@@ -427,7 +426,7 @@ while True:
                       lab.get_height() // 4))
             dog_rect = lab.get_rect(center=(600, 100))
             screen.blit(lab, dog_rect)
-        if game:
+        if game:  # для игрового процесса
             if cell_now.number < center_start:
                 next_c = cell_now.choice_to_go_first_half(grid)
             elif cell_now.number > center_finish:
