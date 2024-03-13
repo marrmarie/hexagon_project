@@ -8,9 +8,8 @@ SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
 flag = 1
-GREEN = (52,164,126)
+GREEN = (52, 164, 126)
 pg.init()
-
 
 
 class Hexagon:
@@ -46,7 +45,6 @@ class Hexagon:
         y1 = y1 - hei
         if self.walls[0]:
             pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a), 3)
-
 
     def choice_to_go_first_half(self, grid):
         neighbours = []
@@ -160,12 +158,11 @@ class Hexagon:
         return False
 
 
-
 def red_dots(grid):
     for i in range(len(grid)):
         h = grid[i]
         if not h.visited:
-            pg.draw.circle(screen, (196,17,74), (h.x + half, h.y + 0.5 * a), a // 3)
+            pg.draw.circle(screen, (196, 17, 74), (h.x + half, h.y + 0.5 * a), a // 3)
 
 
 def true_false_cells_first_half(now, next):
@@ -231,14 +228,9 @@ def true_false_cells_center(now, next):
         next.walls[3] = False
 
 
-def paint_hexagons(x_paint, y_paint, half, count_row):
+def paint_hexagons():
     for i in range(len(grid)):
         grid[i].paint()
-
-
-
-
-
 
 
 queue = deque()
@@ -250,10 +242,9 @@ game = False
 right_input = False
 final_input = 'NO'
 typing = False
-t1 = base_font2.render('', 1, (GREEN))
-t2 = base_font2.render('', 1, (GREEN))
+t1 = base_font2.render('', 1, GREEN)
+t2 = base_font2.render('', 1, GREEN)
 final_scene = False
-
 
 while True:
     screen.fill(GREEN)
@@ -266,7 +257,7 @@ while True:
                 if not game:  # все под этим условием нужно для ввода уровня
                     if i.key == pg.K_BACKSPACE:
                         usertext = usertext[:-1]
-                        t1 = base_font2.render('', 1, (GREEN))
+                        t1 = base_font2.render('', 1, GREEN)
                         typing = False
 
                     else:
@@ -274,13 +265,13 @@ while True:
                              or i.key == pg.K_5) and len(usertext) <= 0):
                             usertext += i.unicode
                             typing = True
-                            t1 = base_font2.render('нажмите ENTER', 1, (GREEN))
+                            t1 = base_font2.render('нажмите ENTER', 1, GREEN)
                         if i.key == pg.K_RETURN and len(usertext) == 1:
                             final_input = int(usertext)
                             game = True
                             usertext = ''
-                            t1 = base_font2.render('', 1, (GREEN))
-                            t = base_font2.render('', 1, (GREEN))
+                            t1 = base_font2.render('', 1, GREEN)
+                            t = base_font2.render('', 1, GREEN)
                             flag = final_input
 
                             if flag == 1:
@@ -395,7 +386,8 @@ while True:
                             final_scene = True
 
         else:  # для финального изображения
-            if i.type == pg.MOUSEBUTTONDOWN and 200 <= pg.mouse.get_pos()[0] <= 500 and 450 <= pg.mouse.get_pos()[1] <= 550:
+            if (i.type == pg.MOUSEBUTTONDOWN and 200 <= pg.mouse.get_pos()[0] <= 500
+                    and 450 <= pg.mouse.get_pos()[1] <= 550):
                 # сброс параметров для продолжения игры
                 game = False
                 final_scene = False
@@ -410,9 +402,10 @@ while True:
                 input_text = pg.Rect(550, 300, 0, 200)
                 right_input = False
                 final_input = 'NO'
-                t1 = base_font2.render('', 1, (GREEN))
-                t2 = base_font2.render('', 1, (GREEN))
-            elif i.type == pg.MOUSEBUTTONDOWN and 700 <= pg.mouse.get_pos()[0] <= 1000 and 450 <= pg.mouse.get_pos()[1] <= 550:
+                t1 = base_font2.render('', 1, GREEN)
+                t2 = base_font2.render('', 1, GREEN)
+            elif (i.type == pg.MOUSEBUTTONDOWN and 700 <= pg.mouse.get_pos()[0] <= 1000
+                  and 450 <= pg.mouse.get_pos()[1] <= 550):
                 exit()
 
     if not final_scene:
@@ -420,7 +413,7 @@ while True:
             # для ввода уровня
             if typing and len(usertext) == 1:
                 pg.draw.rect(screen, 'white', (370, 600, 450, 60), 0)
-                pg.draw.rect(screen, 'white', (input_text), 0)
+                pg.draw.rect(screen, 'white', input_text, 0)
             txt = base_font.render(usertext, True, GREEN)
             screen.blit(txt, (input_text.x + 5, input_text.y + 5))
             input_text.w = 120
@@ -455,7 +448,7 @@ while True:
                 cell_now = next_c
             elif queue:
                 cell_now = queue.pop()
-            paint_hexagons(x_paint, y_paint, half, count_row)
+            paint_hexagons()
             pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
             red_dots(grid)
             pg.draw.rect(screen, GREEN, (coordinates[0][0], coordinates[0][1], 2 * half, a))
@@ -465,9 +458,9 @@ while True:
     else:  # для финального кадра с кнопками и надписью
         pg.draw.rect(screen, 'white', (200, 450, 300, 100))
         pg.draw.rect(screen, 'white', (700, 450, 300, 100))
-        f1 = base_font2.render('заново', 1, (GREEN))
+        f1 = base_font2.render('заново', 1, GREEN)
         screen.blit(f1, (250, 475))
-        f1 = base_font2.render('выйти', 1, (GREEN))
+        f1 = base_font2.render('выйти', 1, GREEN)
         screen.blit(f1, (765, 475))
         n1 = pg.image.load('images/надпись_финал.PNG')
         n1 = pg.transform.scale(
@@ -477,4 +470,3 @@ while True:
         screen.blit(n1, n1_rect)
     pg.display.flip()
     time.tick(100)
-
