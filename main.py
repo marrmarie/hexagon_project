@@ -136,39 +136,39 @@ class Hexagon:
     def choice_to_go_second_half(self, grid):
         neighbours = []
         n1 = grid[self.number - 1 - 1]
-        n2 = grid[self.number + 1 - 1]
-        n3 = grid[self.number - self.prev_line + 1 - 1]
-        n4 = grid[self.number - self.prev_line - 1]
-        n5 = grid[self.number + self.prev_line - 2 - 1]
-        n6 = grid[self.number + self.prev_line - 1 - 1]
-
         if n1.number <= len(grid) and n1.number > 0 and not n1.visited:
             if not n1.visited and n1.x == self.x - 2 * half:
                 neighbours.append(n1)
 
-        if n2.number <= len(grid) and n2.number > 0 and not n2.visited:
-            if not n2.visited and n2.x == self.x + 2 * half:
-                neighbours.append(n2)
-
-        if n3.number <= len(grid) and n3.number > 0 and not n3.visited:
-            if not n3.visited and n3.x == self.x + half and n3.y == self.y - 1.5 * a:
-                neighbours.append(n3)
-
+        if self.number + 1 - 1 < len(grid):
+            n2 = grid[self.number + 1 - 1]
+            if n2.number <= len(grid) and n2.number > 0 and not n2.visited:
+                if not n2.visited and n2.x == self.x + 2 * half:
+                    neighbours.append(n2)
+        if self.number - self.prev_line + 1 - 1 < len(grid):
+            n3 = grid[self.number - self.prev_line + 1 - 1]
+            if n3.number <= len(grid) and n3.number > 0 and not n3.visited:
+                if not n3.visited and n3.x == self.x + half and n3.y == self.y - 1.5 * a:
+                    neighbours.append(n3)
+        n4 = grid[self.number - self.prev_line - 1]
         if n4.number <= len(grid) and n4.number > 0 and not n4.visited:
             if not n4.visited and n4.x == self.x - half and n4.y == self.y - 1.5 * a:
                 neighbours.append(n4)
-
-        if n5.number <= len(grid) and n5.number > 0 and not n5.visited:
-            if not n5.visited and n5.x == self.x - half and n5.y == self.y + 1.5 * a:
-                neighbours.append(n5)
-
-        if n6.number <= len(grid) and n6.number > 0 and not n6.visited:
-            if not n6.visited and n6.x == self.x + half and n6.y == self.y + 1.5 * a:
-                neighbours.append(n6)
+        if self.number + self.prev_line - 2 - 1 < len(grid):
+            n5 = grid[self.number + self.prev_line - 2 - 1]
+            if n5.number <= len(grid) and n5.number > 0 and not n5.visited:
+                if not n5.visited and n5.x == self.x - half and n5.y == self.y + 1.5 * a:
+                    neighbours.append(n5)
+        if self.number + self.prev_line - 1 - 1 < len(grid):
+            n6 = grid[self.number + self.prev_line - 1 - 1]
+            if n6.number <= len(grid) and n6.number > 0 and not n6.visited:
+                if not n6.visited and n6.x == self.x + half and n6.y == self.y + 1.5 * a:
+                    neighbours.append(n6)
 
         if len(neighbours) != 0:
             return choice(neighbours)
         return False
+
 
     def choice_to_go_center(self, grid):
         neighbours = []
@@ -349,4 +349,4 @@ while True:
     pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
     red_dots(grid)
     pg.display.flip()
-    time.tick(20)
+    time.tick(100)
