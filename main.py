@@ -7,7 +7,7 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 1
+flag = 5
 pg.init()
 
 if flag == 1:
@@ -206,6 +206,9 @@ class Hexagon:
         return False
 
 
+    # def check(self, grid):
+    #     if
+
 def red_dots(grid):
     for i in range(len(grid)):
         h = grid[i]
@@ -281,6 +284,12 @@ def paint_hexagons(x_paint, y_paint, half, count_row):
         grid[i].paint()
 
 
+
+
+
+
+
+coordinates = []
 rise = True
 first_row = count_row
 i = 0
@@ -292,8 +301,10 @@ while count_row != first_row - 1:
     for j in range(count_row):
         if not rise:
             grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row + 1)
+            coordinates.append((int(x_paint), int(y_paint)))
         else:
             grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row - 1)
+            coordinates.append((int(x_paint), int(y_paint)))
         x_paint += 2 * half
         i += 1
 
@@ -313,6 +324,9 @@ cell_now.visited = True
 queue = deque()
 grid[0].visited = True
 
+
+
+
 x = grid[0].x
 y = grid[0].y
 while True:
@@ -321,21 +335,23 @@ while True:
     for i in pg.event.get():
         if i.type == pg.QUIT:
             exit()
+        # if i.type == pg.MOUSEBUTTONDOWN:
+        #     print(pg.mouse.get_pos())
         if i.type == pg.KEYDOWN:
-            if i.key == pg.K_e:
+            if i.key == pg.K_e and (int(x + half), int(y - 1.5 * a)) in coordinates:
                 x += half
                 y -= 1.5 * a
-            if i.key == pg.K_d:
+            if i.key == pg.K_d and (int(x + half * 2), int(y)) in coordinates:
                 x += half * 2
-            if i.key == pg.K_x:
+            if i.key == pg.K_x and (int(x + half), int(y + 1.5 * a)) in coordinates:
                 x += half
                 y += 1.5 * a
-            if i.key == pg.K_z:
+            if i.key == pg.K_z and (int(x - half), int(y + 1.5 * a)) in coordinates:
                 x -= half
                 y += 1.5 * a
-            if i.key == pg.K_a:
+            if i.key == pg.K_a and (int(x - half * 2), int(y)) in coordinates:
                 x -= half * 2
-            if i.key == pg.K_w:
+            if i.key == pg.K_w and (int(x - half), int(y - 1.5 * a)) in coordinates:
                 x -= half
                 y -= 1.5 * a
 
@@ -362,6 +378,7 @@ while True:
     paint_hexagons(x_paint, y_paint, half, count_row)
     pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
     red_dots(grid)
-    pg.draw.rect(screen, 'green', (x, y, 2 * half, a), 10)
+    pg.draw.rect(screen, 'green', (x, y, 2 * half, a), 50)
     pg.display.flip()
     time.tick(100)
+
