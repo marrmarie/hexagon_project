@@ -7,7 +7,8 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 3
+flag = 4
+GREEN = (52,164,126)
 pg.init()
 
 if flag == 1:
@@ -209,7 +210,7 @@ def red_dots(grid):
     for i in range(len(grid)):
         h = grid[i]
         if not h.visited:
-            pg.draw.circle(screen, 'red', (h.x + half, h.y + 0.5 * a), 10)
+            pg.draw.circle(screen, (196,17,74), (h.x + half, h.y + 0.5 * a), a // 3)
 
 
 def true_false_cells_first_half(now, next):
@@ -326,7 +327,7 @@ grid[0].visited = True
 x = grid[0].x
 y = grid[0].y
 while True:
-    screen.fill('white')
+    screen.fill(GREEN)
 
     for i in pg.event.get():
         if i.type == pg.QUIT:
@@ -383,8 +384,9 @@ while True:
     paint_hexagons(x_paint, y_paint, half, count_row)
     pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
     red_dots(grid)
-    pg.draw.rect(screen, 'white', (coordinates[0][0], coordinates[0][1], 2 * half, a))
-    pg.draw.circle(screen, 'pink', (x + half, y + 0.5 * a), 10)
+    pg.draw.rect(screen, GREEN, (coordinates[0][0], coordinates[0][1], 2 * half, a))
+    pg.draw.circle(screen, 'pink', (x + half, y + 0.5 * a), (a // 2))
+    pg.draw.circle(screen, 'red', (coordinates[-1][0] + half, coordinates[-1][1] + 0.5 * a), (a // 2))
     pg.display.flip()
     time.tick(100)
 
