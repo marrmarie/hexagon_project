@@ -46,7 +46,6 @@ elif flag == 5:
     center_finish = 270
     grid = [-1 for i in range(515)]
 
-
 HEX_CONST = (3 / 4) ** 0.5
 half = HEX_CONST * a
 hei = 0.5 * a
@@ -68,7 +67,6 @@ class Hexagon:
         self.row = row
         self.col = col
         self.prev_line = prev_line
-
 
     def paint(self):
         if self.walls[3]:
@@ -169,7 +167,6 @@ class Hexagon:
             return choice(neighbours)
         return False
 
-
     def choice_to_go_center(self, grid):
         neighbours = []
 
@@ -209,13 +206,11 @@ class Hexagon:
         return False
 
 
-
 def red_dots(grid):
     for i in range(len(grid)):
         h = grid[i]
         if h.visited:
             pg.draw.circle(screen, 'red', (h.x + half, h.y + 0.5 * a), 10)
-
 
 
 def true_false_cells_first_half(now, next):
@@ -238,6 +233,7 @@ def true_false_cells_first_half(now, next):
         now.walls[5] = False
         next.walls[3] = False
 
+
 def true_false_cells_second_half(now, next):
     if next.number == now.number - 1:
         now.walls[0] = False
@@ -258,6 +254,7 @@ def true_false_cells_second_half(now, next):
         now.walls[5] = False
         next.walls[3] = False
 
+
 def true_false_cells_center(now, next):
     if next.number == now.number - 1:
         now.walls[0] = False
@@ -277,11 +274,11 @@ def true_false_cells_center(now, next):
     elif next.number == now.number + now.prev_line + 1:
         now.walls[5] = False
         next.walls[3] = False
+
+
 def paint_hexagons(x_paint, y_paint, half, count_row):
     for i in range(len(grid)):
         grid[i].paint()
-
-
 
 
 rise = True
@@ -316,14 +313,31 @@ cell_now.visited = True
 queue = deque()
 grid[0].visited = True
 
+x = grid[0].x
+y = grid[0].y
 while True:
     screen.fill('white')
 
     for i in pg.event.get():
         if i.type == pg.QUIT:
             exit()
-        # if i.type == pg.MOUSEBUTTONDOWN:
-        #     print(pg.mouse.get_pos())
+        if i.type == pg.KEYDOWN:
+            if i.key == pg.K_e:
+                x += half
+                y -= 1.5 * a
+            if i.key == pg.K_d:
+                x += half * 2
+            if i.key == pg.K_x:
+                x += half
+                y += 1.5 * a
+            if i.key == pg.K_z:
+                x -= half
+                y += 1.5 * a
+            if i.key == pg.K_a:
+                x -= half * 2
+            if i.key == pg.K_w:
+                x -= half
+                y -= 1.5 * a
 
     if cell_now.number < center_start:
         next_c = cell_now.choice_to_go_first_half(grid)
@@ -348,5 +362,6 @@ while True:
     paint_hexagons(x_paint, y_paint, half, count_row)
     pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
     red_dots(grid)
+    pg.draw.rect(screen, 'green', (x, y, 2 * half, a), 10)
     pg.display.flip()
     time.tick(100)
