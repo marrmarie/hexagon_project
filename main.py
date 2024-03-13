@@ -7,55 +7,10 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 4
+flag = 1
 GREEN = (52,164,126)
 pg.init()
 
-if flag == 1:
-    a = 60
-    count_row = 5
-    rows = 4
-    center_start = 27
-    center_finish = 35
-    grid = [-1 for i in range(61)]
-elif flag == 2:
-    a = 42
-    count_row = 6
-    rows = 8
-    center_start = 52
-    center_finish = 63
-    grid = [-1 for i in range(114)]
-elif flag == 3:
-    a = 32
-    count_row = 7
-    rows = 12
-    center_start = 85
-    center_finish = 99
-    grid = [-1 for i in range(183)]
-elif flag == 4:
-    a = 26
-    count_row = 9
-    rows = 16
-    center_start = 136
-    center_finish = 154
-    grid = [-1 for i in range(289)]
-elif flag == 5:
-    a = 18
-    count_row = 11
-    rows = 24
-    center_start = 246
-    center_finish = 270
-    grid = [-1 for i in range(515)]
-
-HEX_CONST = (3 / 4) ** 0.5
-half = HEX_CONST * a
-hei = 0.5 * a
-x_paint = 600 - count_row * half
-y_paint = 0.5 * a
-
-HEX_CONST = (3 / 4) ** 0.5
-half = HEX_CONST * a
-hei = 0.5 * a
 
 
 class Hexagon:
@@ -286,107 +241,240 @@ def paint_hexagons(x_paint, y_paint, half, count_row):
 
 
 
-coordinates = []
-rise = True
-first_row = count_row
-i = 0
-row_in_grid = 0
-while count_row != first_row - 1:
-    x_f = x_paint
-    y_f = y_paint
-    row_in_grid += 1
-    for j in range(count_row):
-        if not rise:
-            grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row + 1)
-            coordinates.append((int(x_paint), int(y_paint)))
-        else:
-            grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row - 1)
-            coordinates.append((int(x_paint), int(y_paint)))
-        x_paint += 2 * half
-        i += 1
-
-    if count_row > (2 * first_row + rows) // 2 + 1:
-        rise = False
-    if rise:
-        count_row += 1
-        x_paint = x_f - half
-        y_paint = y_f + 1.5 * a
-    else:
-        count_row -= 1
-        x_paint = x_f + half
-        y_paint = y_f + 1.5 * a
-
-cell_now = grid[0]
-cell_now.visited = True
 queue = deque()
-grid[0].visited = True
+usertext = ''
+base_font = pg.font.Font(None, 300)
+base_font2 = pg.font.Font(None, 80)
+input_text = pg.Rect(550, 300, 0, 200)
+game = False
+right_input = False
+final_input = 'NO'
+typing = False
+t1 = base_font2.render('', 1, (GREEN))
+t2 = base_font2.render('', 1, (GREEN))
+final_scene = False
 
 
-
-
-x = grid[0].x
-y = grid[0].y
 while True:
     screen.fill(GREEN)
 
     for i in pg.event.get():
         if i.type == pg.QUIT:
             exit()
-        # if i.type == pg.MOUSEBUTTONDOWN:
-        #     print(pg.mouse.get_pos())
-        if i.type == pg.KEYDOWN:
-            if i.key == pg.K_e and (int(x + half), int(y - 1.5 * a)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[2]:
-                    x += half
-                    y -= 1.5 * a
+        if not final_scene:
+            if i.type == pg.KEYDOWN:
+                if not game:  # все под этим условием нужно для ввода уровня
+                    if i.key == pg.K_BACKSPACE:
+                        usertext = usertext[:-1]
+                        t1 = base_font2.render('', 1, (GREEN))
+                        typing = False
 
-            if i.key == pg.K_d and (int(x + half * 2), int(y)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[1]:
-                    x += half * 2
-            if i.key == pg.K_x and (int(x + half), int(y + 1.5 * a)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[5]:
-                    x += half
-                    y += 1.5 * a
-            if i.key == pg.K_z and (int(x - half), int(y + 1.5 * a)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[4]:
-                    x -= half
-                    y += 1.5 * a
-            if i.key == pg.K_a and (int(x - half * 2), int(y)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[0]:
-                    x -= half * 2
-            if i.key == pg.K_w and (int(x - half), int(y - 1.5 * a)) in coordinates:
-                if not grid[coordinates.index((int(x), int(y)))].walls[3]:
-                    x -= half
-                    y -= 1.5 * a
-            if int(x) == int(coordinates[-1][0]) and int(y) == int(coordinates[-1][1]):
-                print('QUIT')
+                    else:
+                        if ((i.key == pg.K_1 or i.key == pg.K_2 or i.key == pg.K_3 or i.key == pg.K_4
+                             or i.key == pg.K_5) and len(usertext) <= 0):
+                            usertext += i.unicode
+                            typing = True
+                            t1 = base_font2.render('нажмите ENTER', 1, (GREEN))
+                        if i.key == pg.K_RETURN and len(usertext) == 1:
+                            final_input = int(usertext)
+                            game = True
+                            usertext = ''
+                            t1 = base_font2.render('', 1, (GREEN))
+                            t = base_font2.render('', 1, (GREEN))
+                            flag = final_input
 
-    if cell_now.number < center_start:
-        next_c = cell_now.choice_to_go_first_half(grid)
-    elif cell_now.number > center_finish:
-        next_c = cell_now.choice_to_go_second_half(grid)
-    else:
-        next_c = cell_now.choice_to_go_center(grid)
+                            if flag == 1:
+                                a = 60
+                                count_row = 5
+                                rows = 4
+                                center_start = 27
+                                center_finish = 35
+                                grid = [-1 for i in range(61)]
+                            elif flag == 2:
+                                a = 42
+                                count_row = 6
+                                rows = 8
+                                center_start = 52
+                                center_finish = 63
+                                grid = [-1 for i in range(114)]
+                            elif flag == 3:
+                                a = 32
+                                count_row = 7
+                                rows = 12
+                                center_start = 85
+                                center_finish = 99
+                                grid = [-1 for i in range(183)]
+                            elif flag == 4:
+                                a = 26
+                                count_row = 9
+                                rows = 16
+                                center_start = 136
+                                center_finish = 154
+                                grid = [-1 for i in range(289)]
+                            elif flag == 5:
+                                a = 18
+                                count_row = 11
+                                rows = 24
+                                center_start = 246
+                                center_finish = 270
+                                grid = [-1 for i in range(515)]
 
-    if next_c:
-        next_c.visited = True
-        queue.append(cell_now)
-        if cell_now.number < center_start:
-            true_false_cells_first_half(cell_now, next_c)
-        elif cell_now.number > center_finish:
-            true_false_cells_second_half(cell_now, next_c)
-        else:
-            true_false_cells_center(cell_now, next_c)
+                            HEX_CONST = (3 / 4) ** 0.5
+                            half = HEX_CONST * a
+                            hei = 0.5 * a
+                            x_paint = 600 - count_row * half
+                            y_paint = 0.5 * a
 
-        cell_now = next_c
-    elif queue:
-        cell_now = queue.pop()
-    paint_hexagons(x_paint, y_paint, half, count_row)
-    pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
-    red_dots(grid)
-    pg.draw.rect(screen, GREEN, (coordinates[0][0], coordinates[0][1], 2 * half, a))
-    pg.draw.circle(screen, 'pink', (x + half, y + 0.5 * a), (a // 2))
-    pg.draw.circle(screen, 'red', (coordinates[-1][0] + half, coordinates[-1][1] + 0.5 * a), (a // 2))
+                            HEX_CONST = (3 / 4) ** 0.5
+                            half = HEX_CONST * a
+                            hei = 0.5 * a
+
+                            coordinates = []
+                            rise = True
+                            first_row = count_row
+                            i = 0
+                            row_in_grid = 0
+                            while count_row != first_row - 1:
+                                x_f = x_paint
+                                y_f = y_paint
+                                row_in_grid += 1
+                                for j in range(count_row):
+                                    if not rise:
+                                        grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row + 1)
+                                        coordinates.append((int(x_paint), int(y_paint)))
+                                    else:
+                                        grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row - 1)
+                                        coordinates.append((int(x_paint), int(y_paint)))
+                                    x_paint += 2 * half
+                                    i += 1
+
+                                if count_row > (2 * first_row + rows) // 2 + 1:
+                                    rise = False
+                                if rise:
+                                    count_row += 1
+                                    x_paint = x_f - half
+                                    y_paint = y_f + 1.5 * a
+                                else:
+                                    count_row -= 1
+                                    x_paint = x_f + half
+                                    y_paint = y_f + 1.5 * a
+
+                            cell_now = grid[0]
+                            cell_now.visited = True
+
+                            x = grid[0].x
+                            y = grid[0].y
+                            grid[0].visited = True
+
+                else:
+                    if i.type == pg.KEYDOWN:
+                        if i.key == pg.K_e and (int(x + half), int(y - 1.5 * a)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[2]:
+                                x += half
+                                y -= 1.5 * a
+
+                        if i.key == pg.K_d and (int(x + half * 2), int(y)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[1]:
+                                x += half * 2
+                        if i.key == pg.K_x and (int(x + half), int(y + 1.5 * a)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[5]:
+                                x += half
+                                y += 1.5 * a
+                        if i.key == pg.K_z and (int(x - half), int(y + 1.5 * a)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[4]:
+                                x -= half
+                                y += 1.5 * a
+                        if i.key == pg.K_a and (int(x - half * 2), int(y)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[0]:
+                                x -= half * 2
+                        if i.key == pg.K_w and (int(x - half), int(y - 1.5 * a)) in coordinates:
+                            if not grid[coordinates.index((int(x), int(y)))].walls[3]:
+                                x -= half
+                                y -= 1.5 * a
+                        if int(x) == int(coordinates[-1][0]) and int(y) == int(coordinates[-1][1]):
+                            final_scene = True
+
+        else:  # для финального изображения
+            if i.type == pg.MOUSEBUTTONDOWN and 200 <= pg.mouse.get_pos()[0] <= 500 and 450 <= pg.mouse.get_pos()[1] <= 550:
+                # сброс параметров для продолжения игры
+                game = False
+                final_scene = False
+                typing = True
+                x = grid[0].x
+                y = grid[0].y
+                grid = []
+                queue = deque()
+                usertext = ''
+                base_font = pg.font.Font(None, 300)
+                base_font2 = pg.font.Font(None, 80)
+                input_text = pg.Rect(550, 300, 0, 200)
+                right_input = False
+                final_input = 'NO'
+                t1 = base_font2.render('', 1, (GREEN))
+                t2 = base_font2.render('', 1, (GREEN))
+            elif i.type == pg.MOUSEBUTTONDOWN and 700 <= pg.mouse.get_pos()[0] <= 1000 and 450 <= pg.mouse.get_pos()[1] <= 550:
+                exit()
+
+    if not final_scene:
+        if not game:
+            # для ввода уровня
+            if typing and len(usertext) == 1:
+                pg.draw.rect(screen, 'white', (370, 600, 450, 60), 0)
+                pg.draw.rect(screen, 'white', (input_text), 0)
+            txt = base_font.render(usertext, True, GREEN)
+            screen.blit(txt, (input_text.x + 5, input_text.y + 5))
+            input_text.w = 120
+            pg.draw.rect(screen, 'white', (50, 200, 1100, 60))
+            t = base_font2.render('введите уровень сложности от 1 до 5', 1, GREEN)
+            screen.blit(t, (80, 200))
+            screen.blit(t1, (370, 600))
+            lab = pg.image.load('images/надпись.PNG')
+            lab = pg.transform.scale(
+                lab, (lab.get_width() // 4,
+                      lab.get_height() // 4))
+            dog_rect = lab.get_rect(center=(600, 100))
+            screen.blit(lab, dog_rect)
+        if game:
+            if cell_now.number < center_start:
+                next_c = cell_now.choice_to_go_first_half(grid)
+            elif cell_now.number > center_finish:
+                next_c = cell_now.choice_to_go_second_half(grid)
+            else:
+                next_c = cell_now.choice_to_go_center(grid)
+
+            if next_c:
+                next_c.visited = True
+                queue.append(cell_now)
+                if cell_now.number < center_start:
+                    true_false_cells_first_half(cell_now, next_c)
+                elif cell_now.number > center_finish:
+                    true_false_cells_second_half(cell_now, next_c)
+                else:
+                    true_false_cells_center(cell_now, next_c)
+
+                cell_now = next_c
+            elif queue:
+                cell_now = queue.pop()
+            paint_hexagons(x_paint, y_paint, half, count_row)
+            pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
+            red_dots(grid)
+            pg.draw.rect(screen, GREEN, (coordinates[0][0], coordinates[0][1], 2 * half, a))
+            pg.draw.circle(screen, 'pink', (x + half, y + 0.5 * a), (a // 2))
+            pg.draw.circle(screen, 'red', (coordinates[-1][0] + half, coordinates[-1][1] + 0.5 * a), (a // 2))
+
+    else:  # для финального кадра с кнопками и надписью
+        pg.draw.rect(screen, 'white', (200, 450, 300, 100))
+        pg.draw.rect(screen, 'white', (700, 450, 300, 100))
+        f1 = base_font2.render('заново', 1, (GREEN))
+        screen.blit(f1, (250, 475))
+        f1 = base_font2.render('выйти', 1, (GREEN))
+        screen.blit(f1, (765, 475))
+        n1 = pg.image.load('images/надпись_финал.PNG')
+        n1 = pg.transform.scale(
+            n1, (n1.get_width() // 4.5,
+                 n1.get_height() // 4.5))
+        n1_rect = n1.get_rect(center=(600, 200))
+        screen.blit(n1, n1_rect)
     pg.display.flip()
     time.tick(100)
 
