@@ -7,7 +7,7 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 1
+flag = 5
 pg.init()
 
 
@@ -69,18 +69,18 @@ class Hexagon:
 
 
     def paint(self):
-        if self.walls[0]:
+        if self.walls[3]:
             pg.draw.line(screen, 'black', (self.x, self.y), (self.x + half, self.y - hei))
         x1 = self.x + half
         y1 = self.y - hei
-        if self.walls[1]:
+        if self.walls[2]:
             pg.draw.line(screen, 'black', (x1, y1), (x1 + half, y1 + hei))
         x1 = x1 + half
         y1 = y1 + hei
-        if self.walls[2]:
+        if self.walls[1]:
             pg.draw.line(screen, 'black', (x1, y1), (x1, y1 + a))
         y1 += a
-        if self.walls[3]:
+        if self.walls[5]:
             pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 + hei))
         x1 = x1 - half
         y1 = y1 + hei
@@ -88,46 +88,59 @@ class Hexagon:
             pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 - hei))
         x1 = x1 - half
         y1 = y1 - hei
-        if self.walls[5]:
+        if self.walls[0]:
             pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a))
 
 
     def choice_to_go(self, grid):
         neighbours = []
-        n1 = self.number - 1
-        n2 = self.number + 1
-        n3 = self.number - self.prev_line
-        n4 = n3 - 1
-        n5 = self.number + self.prev_line + 1
-        n6 = self.number + self.prev_line + 2
-        if n1 <= len(grid):
-            if not grid[n1 - 1].visited and grid[n1 - 1].x == self.x - 2 * half:
+        n1 = grid[self.number - 1 - 1]
+        n2 = grid[self.number + 1 - 1]
+        n3 = grid[self.number - self.prev_line - 1]
+        n4 = grid[n3.number - 1 - 1]
+        n5 = grid[self.number + self.prev_line + 1 - 1]
+        n6 = grid[self.number + self.prev_line + 2 - 1]
+
+        if n1.number <= len(grid) and n1.number > 0:
+            if not n1.visited and n1.x == self.x - 2 * half:
                 neighbours.append(n1)
-        if n2 <= len(grid):
-            if not grid[n2 - 1].visited and grid[n2 - 1].x == self.x + 2 * half:
+
+        if n2.number <= len(grid) and n2.number > 0:
+            if not n2.visited and n2.x == self.x + 2 * half:
                 neighbours.append(n2)
-        if n3 <= len(grid):
-            if not grid[n3 - 1].visited and grid[n3 - 1].x == self.x + half and grid[n3 - 1].y == self.y - 1.5 * a:
+
+        if n3.number <= len(grid) and n3.number > 0:
+            if not n3.visited and n3.x == self.x + half and n3.y == self.y - 1.5 * a:
                 neighbours.append(n3)
-        if n4 <= len(grid):
-            if not grid[n4 - 1].visited and grid[n4 - 1].x == self.x - half and grid[n4 - 1].y == self.y - 1.5 * a:
+
+        if n4.number <= len(grid) and n4.number > 0:
+            if not n4.visited and n4.x == self.x - half and n4.y == self.y - 1.5 * a:
                 neighbours.append(n4)
-        if n5 <= len(grid):
-            if not grid[n5 - 1].visited and grid[n5 - 1].x == self.x - half and grid[n5 - 1].y == self.y + 1.5 * a:
+
+        if n5.number <= len(grid) and n5.number > 0:
+            if not n5.visited and n5.x == self.x - half and n5.y == self.y + 1.5 * a:
                 neighbours.append(n5)
-        if n6 <= len(grid):
-            if not grid[n6 - 1].visited and grid[n6 - 1].x == self.x + half and grid[n6 - 1].y == self.y + 1.5 * a:
+
+        if n6.number <= len(grid) and n6.number > 0:
+            if not n6.visited and n6.x == self.x + half and n6.y == self.y + 1.5 * a:
                 neighbours.append(n6)
 
         if len(neighbours) != 0:
             return choice(neighbours)
         return False
 
+def red_dots(grid):
+    for i in range(len(grid)):
+        h = grid[i]
+        if h.visited:
+            pg.draw.circle(screen, 'red', (h.x + half, h.y + 0.5 * a), 10)
+
+
 def true_false_cells(now, next):
-    if next.number == now.nuber - 1:
+    if next.number == now.number - 1:
         now.walls[0] = False
         next.walls[1] = False
-    elif next.number == now.nuber + 1:
+    elif next.number == now.number + 1:
         now.walls[1] = False
         next.walls[0] = False
     elif next.number == now.number - now.prev_line:
@@ -139,7 +152,7 @@ def true_false_cells(now, next):
     elif next.number == now.number + now.prev_line + 1:
         now.walls[4] = False
         next.walls[2] = False
-    elif next.number == now.number + now.prev_line + 1:
+    elif next.number == now.number + now.prev_line + 2:
         now.walls[5] = False
         next.walls[3] = False
 
@@ -159,7 +172,7 @@ while count_row != first_row - 1:
     y_f = y_paint
     row_in_grid += 1
     for j in range(count_row):
-        grid[i] = Hexagon(x_paint, y_paint, i, row_in_grid, j + 1, count_row - 1)
+        grid[i] = Hexagon(x_paint, y_paint, i + 1, row_in_grid, j + 1, count_row - 1)
         x_paint += 2 * half
         i += 1
 
@@ -198,6 +211,8 @@ while True:
     elif queue:
         cell_now = queue.pop()
     paint_hexagons(x_paint, y_paint, half, count_row)
+    pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
+    red_dots(grid)
     pg.display.flip()
     time.tick(100)
 
