@@ -7,7 +7,7 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 5
+flag = 1
 pg.init()
 
 if flag == 1:
@@ -339,21 +339,29 @@ while True:
         #     print(pg.mouse.get_pos())
         if i.type == pg.KEYDOWN:
             if i.key == pg.K_e and (int(x + half), int(y - 1.5 * a)) in coordinates:
-                x += half
-                y -= 1.5 * a
+                if not grid[coordinates.index((int(x), int(y)))].walls[2]:
+                    x += half
+                    y -= 1.5 * a
+                # else:
+                #     print(grid[coordinates.index((int(x + half), int(y - 1.5 * a)))].walls)
             if i.key == pg.K_d and (int(x + half * 2), int(y)) in coordinates:
-                x += half * 2
+                if not grid[coordinates.index((int(x), int(y)))].walls[1]:
+                    x += half * 2
             if i.key == pg.K_x and (int(x + half), int(y + 1.5 * a)) in coordinates:
-                x += half
-                y += 1.5 * a
+                if not grid[coordinates.index((int(x), int(y)))].walls[5]:
+                    x += half
+                    y += 1.5 * a
             if i.key == pg.K_z and (int(x - half), int(y + 1.5 * a)) in coordinates:
-                x -= half
-                y += 1.5 * a
+                if not grid[coordinates.index((int(x), int(y)))].walls[4]:
+                    x -= half
+                    y += 1.5 * a
             if i.key == pg.K_a and (int(x - half * 2), int(y)) in coordinates:
-                x -= half * 2
+                if not grid[coordinates.index((int(x), int(y)))].walls[0]:
+                    x -= half * 2
             if i.key == pg.K_w and (int(x - half), int(y - 1.5 * a)) in coordinates:
-                x -= half
-                y -= 1.5 * a
+                if not grid[coordinates.index((int(x), int(y)))].walls[3]:
+                    x -= half
+                    y -= 1.5 * a
 
     if cell_now.number < center_start:
         next_c = cell_now.choice_to_go_first_half(grid)
