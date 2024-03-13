@@ -7,7 +7,7 @@ HEIGHT = 850
 SIZE = [WIDTH, HEIGHT]
 screen = pg.display.set_mode(SIZE)
 time = pg.time.Clock()
-flag = 1
+flag = 3
 pg.init()
 
 if flag == 1:
@@ -18,28 +18,28 @@ if flag == 1:
     center_finish = 35
     grid = [-1 for i in range(61)]
 elif flag == 2:
-    a = 42.3
+    a = 42
     count_row = 6
     rows = 8
     center_start = 52
     center_finish = 63
     grid = [-1 for i in range(114)]
 elif flag == 3:
-    a = 32.6
+    a = 32
     count_row = 7
     rows = 12
     center_start = 85
     center_finish = 99
     grid = [-1 for i in range(183)]
 elif flag == 4:
-    a = 26.4
+    a = 26
     count_row = 9
     rows = 16
     center_start = 136
     center_finish = 154
     grid = [-1 for i in range(289)]
 elif flag == 5:
-    a = 19.2
+    a = 18
     count_row = 11
     rows = 24
     center_start = 246
@@ -70,29 +70,27 @@ class Hexagon:
 
     def paint(self):
         if self.walls[3]:
-            pg.draw.line(screen, 'black', (self.x, self.y), (self.x + half, self.y - hei))
+            pg.draw.line(screen, 'black', (self.x, self.y), (self.x + half, self.y - hei), 3)
         x1 = self.x + half
         y1 = self.y - hei
         if self.walls[2]:
-            pg.draw.line(screen, 'black', (x1, y1), (x1 + half, y1 + hei))
+            pg.draw.line(screen, 'black', (x1, y1), (x1 + half, y1 + hei), 3)
         x1 = x1 + half
         y1 = y1 + hei
         if self.walls[1]:
-            pg.draw.line(screen, 'black', (x1, y1), (x1, y1 + a))
+            pg.draw.line(screen, 'black', (x1, y1), (x1, y1 + a), 3)
         y1 += a
         if self.walls[5]:
-            pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 + hei))
+            pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 + hei), 3)
         x1 = x1 - half
         y1 = y1 + hei
         if self.walls[4]:
-            pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 - hei))
+            pg.draw.line(screen, 'black', (x1, y1), (x1 - half, y1 - hei), 3)
         x1 = x1 - half
         y1 = y1 - hei
         if self.walls[0]:
-            pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a))
-        # base_font2 = pg.font.Font(None, 20)
-        # f1 = base_font2.render(str(self.number), 1, 'black')
-        # screen.blit(f1, (self.x + half, self.y + 0.5 * a))
+            pg.draw.line(screen, 'black', (x1, y1), (x1, y1 - a), 3)
+
 
     def choice_to_go_first_half(self, grid):
         neighbours = []
@@ -206,13 +204,11 @@ class Hexagon:
         return False
 
 
-    # def check(self, grid):
-    #     if
 
 def red_dots(grid):
     for i in range(len(grid)):
         h = grid[i]
-        if h.visited:
+        if not h.visited:
             pg.draw.circle(screen, 'red', (h.x + half, h.y + 0.5 * a), 10)
 
 
@@ -342,8 +338,7 @@ while True:
                 if not grid[coordinates.index((int(x), int(y)))].walls[2]:
                     x += half
                     y -= 1.5 * a
-                # else:
-                #     print(grid[coordinates.index((int(x + half), int(y - 1.5 * a)))].walls)
+
             if i.key == pg.K_d and (int(x + half * 2), int(y)) in coordinates:
                 if not grid[coordinates.index((int(x), int(y)))].walls[1]:
                     x += half * 2
@@ -362,6 +357,8 @@ while True:
                 if not grid[coordinates.index((int(x), int(y)))].walls[3]:
                     x -= half
                     y -= 1.5 * a
+            if int(x) == int(coordinates[-1][0]) and int(y) == int(coordinates[-1][1]):
+                print('QUIT')
 
     if cell_now.number < center_start:
         next_c = cell_now.choice_to_go_first_half(grid)
@@ -386,7 +383,8 @@ while True:
     paint_hexagons(x_paint, y_paint, half, count_row)
     pg.draw.rect(screen, 'black', (cell_now.x, cell_now.y, 2 * half, a))
     red_dots(grid)
-    pg.draw.rect(screen, 'green', (x, y, 2 * half, a), 50)
+    pg.draw.rect(screen, 'white', (coordinates[0][0], coordinates[0][1], 2 * half, a))
+    pg.draw.circle(screen, 'pink', (x + half, y + 0.5 * a), 10)
     pg.display.flip()
     time.tick(100)
 
